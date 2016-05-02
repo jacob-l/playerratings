@@ -1,0 +1,86 @@
+﻿@using PlayerRatings.Localization
+@model PlayerRatings.ViewModels.League.RatingViewModel
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Rating)];
+}
+
+<h3>@ViewData["Title"]</h3>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @LocString[nameof(LocalizationKey.DisplayName)]
+        </th>
+        @foreach (var item in Model.Stats)
+        {
+            <th>
+                @LocString[item.NameLocalizationKey]
+            </th>
+        }
+    </tr>
+
+    @foreach (var item in Model.Users)
+    {
+        <tr>
+            <td>
+                @item.DisplayName
+            </td>
+            @foreach (var res in Model.Stats)
+            {
+                <td>
+                    @res.GetResult(item)
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+<h3>@LocString[nameof(LocalizationKey.LastMatches)]</h3>
+<table class="table table-striped">
+    @foreach (var item in Model.LastMatches)
+    {
+        <tr>
+            <td>
+                @item.GetDescription()
+            </td>
+            <td>
+                @item.GetScore()
+            </td>
+            <td>
+                @item.Date
+            </td>
+        </tr>
+    }
+</table>
+
+<h3>@LocString[nameof(LocalizationKey.Forecast)]</h3>
+<table class="table table-striped">
+    <tr>
+        <th>
+        </th>
+        @foreach (var item in Model.Users)
+        {
+            <th>
+                @item.DisplayName
+            </th>
+        }
+    </tr>
+
+    @foreach (var userVer in Model.Users)
+    {
+        <tr>
+            <td>
+                @userVer.DisplayName
+            </td>
+            @foreach (var userHor in Model.Users)
+            {
+                <td>
+                    @if (userHor != userVer)
+                    {
+                        @Model.Forecast[userVer.Id][userHor.Id]
+                    }
+                </td>
+            }
+        </tr>
+    }
+</table>

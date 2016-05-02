@@ -1,0 +1,29 @@
+@using PlayerRatings.Localization
+@model PlayerRatings.ViewModels.League.LeagueViewModel
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Delete)];
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>@LocString[nameof(LocalizationKey.AreYouSureDelete)]?</h3>
+<div>
+    <h4>@LocString[nameof(LocalizationKey.League)]</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @LocString[nameof(LocalizationKey.DisplayName)]
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="@LocString[nameof(LocalizationKey.Delete)]" class="btn btn-default" /> |
+            <a asp-action="Index">@LocString[nameof(LocalizationKey.BackToList)]</a>
+        </div>
+    </form>
+</div>

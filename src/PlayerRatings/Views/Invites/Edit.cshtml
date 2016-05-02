@@ -1,0 +1,39 @@
+﻿@using PlayerRatings.Localization
+@model PlayerRatings.ViewModels.Invites.InviteViewModel
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Edit)];
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>@LocString[nameof(LocalizationKey.Invite)]</h4>
+        <hr />
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Email" class="form-control"/>
+                <span asp-validation-for="Email" class="text-danger" />
+            </div>
+        </div>
+        <input asp-for="Id" type="hidden"/>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="@LocString[nameof(LocalizationKey.ResendInvitation)]" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">@LocString[nameof(LocalizationKey.BackToList)]</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

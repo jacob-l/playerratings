@@ -1,0 +1,87 @@
+﻿@using PlayerRatings.Localization
+@model PlayerRatings.ViewModels.Match.ImportViewModel
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Import)];
+}
+
+<h2>@ViewData["Title"].</h2>
+<div class="row">
+    <div class="col-md-8">
+        <section>
+            <form method="post" asp-action="Import" enctype="multipart/form-data" class="form-horizontal" role="form">
+                <h4>@LocString[nameof(LocalizationKey.ImportData)].</h4>
+                <hr />
+                <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="DateIndex" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.DateIndex)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="DateIndex" class="form-control" />
+                        <span asp-validation-for="DateIndex" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstPlayerEmailIndex" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.FirstPlayerEmailIndex)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="FirstPlayerEmailIndex" class="form-control" />
+                        <span asp-validation-for="FirstPlayerEmailIndex" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstPlayerScoreIndex" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.FirstPlayerScoreIndex)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="FirstPlayerScoreIndex" class="form-control"/>
+                        <span asp-validation-for="FirstPlayerScoreIndex" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondPlayerEmailIndex" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.SecondPlayerEmailIndex)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="SecondPlayerEmailIndex" class="form-control" />
+                        <span asp-validation-for="SecondPlayerEmailIndex" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SecondPlayerScoreIndex" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.SecondPlayerScoreIndex)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="SecondPlayerScoreIndex" class="form-control" />
+                        <span asp-validation-for="SecondPlayerScoreIndex" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FactorIndex" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.FactorIndex)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="FactorIndex" class="form-control"/>
+                        <span asp-validation-for="FactorIndex" class="text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" name="LeagueId" value="@Model.LeagueId" />
+                <div class="form-group">
+                    <label asp-for="DateTimeFormat" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.DateTimeFormat)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="DateTimeFormat" class="form-control" />
+                        <span asp-validation-for="DateTimeFormat" class="text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" name="LeagueId" value="@Model.LeagueId"/>
+
+                <div class="form-group">
+                    <label asp-for="File" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.File)]</label>
+                    <div class="col-md-10">
+                        <input type="file" name="File" />
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-default">@LocString[nameof(LocalizationKey.Import)]</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

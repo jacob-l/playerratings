@@ -1,0 +1,17 @@
+******For using moq for Core, please, add new package source to nuget.*****
+Go to Tools -> Options -> NuGet Package Manager.
+Press add(green plus) button.
+
+Name: aspnet-contrib
+Source: https://www.myget.org/F/aspnet-contrib/api/v3/index.json
+
+
+*****How to cofigure app secrets?******
+Details: https://github.com/aspnet/Home/wiki/DNX-Secret-Configuration
+1. Go to playerratings\src\PlayerRatings
+2. Call dnu commands install Microsoft.Extensions.SecretManager
+3. Add necessary appsetting. See all possible settings at playerratings\src\PlayerRatings\AppSettings.cs
+For example, let's confugure Google OAuth
+Call:
+user-secret set AppSettings:GoogleClientId Example.apps.googleusercontent.com
+user-secret set AppSettings:GoogleClientSecret AAAAbbbbCCCddddd

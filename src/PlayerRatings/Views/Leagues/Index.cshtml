@@ -1,0 +1,49 @@
+@using PlayerRatings.Localization
+@using PlayerRatings.Util
+@model IEnumerable<PlayerRatings.ViewModels.League.LeagueViewModel>
+
+@inject UserManager<ApplicationUser> UserManager;
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Leagues)];
+
+    var appUser = await User.GetApplicationUser(UserManager);
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create">@LocString[nameof(LocalizationKey.CreateNew)]</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @LocString[nameof(LocalizationKey.DisplayName)]
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a asp-action="Rating" asp-route-id="@item.Id">
+                @Html.DisplayFor(modelItem => item.Name)
+            </a>
+        </td>
+        <td>
+            <a asp-action="Rating" asp-route-id="@item.Id">@LocString[nameof(LocalizationKey.Rating)]</a> |
+            <a asp-controller="Matches" asp-action="Index" asp-route-leagueId="@item.Id">@LocString[nameof(LocalizationKey.Matches)]</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">@LocString[nameof(LocalizationKey.Details)]</a> |
+            <a asp-controller="Invites" asp-action="Create" asp-route-leagueId="@item.Id">@LocString[nameof(LocalizationKey.Invite)]</a> |
+            <a asp-controller="Matches" asp-action="Import" asp-route-leagueId="@item.Id">@LocString[nameof(LocalizationKey.ImportMatches)]</a>
+            @if (item.CreatedByUserId == appUser.Id)
+            {
+                <span> | </span>
+                <a asp-action="Edit" asp-route-id="@item.Id">@LocString[nameof(LocalizationKey.Edit)]</a>
+                <span> | </span>
+                <a asp-action="Delete" asp-route-id="@item.Id">@LocString[nameof(LocalizationKey.Delete)]</a>
+            }
+        </td>
+    </tr>
+}
+</table>

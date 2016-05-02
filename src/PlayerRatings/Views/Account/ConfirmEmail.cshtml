@@ -1,0 +1,14 @@
+﻿@using PlayerRatings.Localization
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.ConfirmEmail)];
+}
+
+<h2>@ViewData["Title"].</h2>
+<div>
+    <p>
+        @LocString[nameof(LocalizationKey.ThankYouForConfirm)].
+        <a asp-controller="Account" asp-action="Login">
+            @LocString[nameof(LocalizationKey.ClickHereToLogin)]
+        </a>.
+    </p>
+</div>

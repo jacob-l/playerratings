@@ -1,0 +1,9 @@
+﻿@using PlayerRatings.Localization
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.LoginFailure)];
+}
+
+<header>
+    <h2>@ViewData["Title"].</h2>
+    <p class="text-danger">@LocString[nameof(LocalizationKey.UnsuccessfulLoginWithService)].</p>
+</header>

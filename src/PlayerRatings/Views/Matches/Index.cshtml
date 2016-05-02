@@ -1,0 +1,53 @@
+﻿@using System.Threading.Tasks
+@using PlayerRatings.Localization
+@using PlayerRatings.Util
+@model PlayerRatings.ViewModels.Match.MatchesViewModel
+@inject UserManager<ApplicationUser> UserManager;
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Matches)];
+    var appUser = await User.GetApplicationUser(UserManager);
+    var active = "active";
+}
+
+<table class="table">
+    <tr>
+        <th>
+        </th>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Matches)
+    {
+        <tr>
+            <td>
+                @item.GetDescription()
+            </td>
+            <td>
+                @item.GetScore()
+            </td>
+            <td>
+                @if (item.CreatedByUserId == appUser.Id || item.League.CreatedByUserId == appUser.Id)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">@LocString[nameof(LocalizationKey.Edit)]</a>
+                    @: |
+                    <a asp-action="Delete" asp-route-id="@item.Id">@LocString[nameof(LocalizationKey.Delete)]</a>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<ul class="pagination">
+    @for (var i = 0; i < Model.PagesCount; i++)
+    {
+        <li class="@(Model.CurrentPage == i ? active : string.Empty)">
+            <a asp-action="Index" asp-route-leagueid="@Model.LeagueId" asp-route-page="@i">@(i+1)</a>
+        </li>
+    }
+</ul>

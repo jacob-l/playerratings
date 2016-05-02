@@ -1,0 +1,53 @@
+@using PlayerRatings.Localization
+@using PlayerRatings.Util
+@model PlayerRatings.ViewModels.League.LeagueDetailsViewModel
+
+@inject UserManager<ApplicationUser> UserManager;
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Details)];
+
+    var appUser = await User.GetApplicationUser(UserManager);
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>@LocString[nameof(LocalizationKey.League)] - @Html.DisplayFor(model => model.League.Name)</h4>
+
+    <table class="table">
+        @foreach (var player in Model.Players)
+        {
+            <tr>
+                <td>
+                    @player.User.DisplayName
+                </td>
+                <td>
+                    @if (Model.League.CreatedByUserId == appUser.Id)
+                    {
+                        if (player.IsBlocked)
+                         {
+                             <form asp-action="SetBlocked" asp-route-playerid="@player.Id" asp-route-block="false" method="post" role="form">
+                                 <button type="submit" class="btn btn-link" name="language" title="@LocString[nameof(LocalizationKey.Unblock)]">
+                                     @LocString[nameof(LocalizationKey.Unblock)]
+                                 </button>
+                             </form>
+                         }
+                         else
+                         {
+                             <form asp-action="SetBlocked" asp-route-playerid="@player.Id" asp-route-block="true" method="post" role="form">
+                                 <button type="submit" class="btn btn-link" name="language" value="true" title="@LocString[nameof(LocalizationKey.Block)]">
+                                     @LocString[nameof(LocalizationKey.Block)]
+                                 </button>
+
+                             </form>
+                         }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.League.Id">@LocString[nameof(LocalizationKey.Edit)]</a> |
+    <a asp-action="Index">@LocString[nameof(LocalizationKey.BackToList)]</a>
+</p>

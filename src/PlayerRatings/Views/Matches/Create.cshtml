@@ -1,0 +1,78 @@
+﻿@using PlayerRatings.Localization
+@model PlayerRatings.ViewModels.Match.NewResultViewModel
+
+@{
+    ViewData["Title"] = LocString[nameof(LocalizationKey.Create)];
+}
+
+<form method="post" asp-antiforgery="true">
+    <div class="form-horizontal">
+        <h4>@LocString[nameof(LocalizationKey.Match)]</h4>
+        <hr />
+        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="LeagueId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.League)]</label>
+            <div class="col-md-10">
+                <select asp-for="LeagueId"
+                        asp-items="@(new SelectList(Model.Leagues, "Id", "Name"))">
+                </select>
+                <span asp-validation-for="LeagueId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Date" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.Date)]</label>
+            <div class="col-md-10">
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FirstPlayerId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.FirstPlayer)]</label>
+            <div class="col-md-10">
+                <select asp-for="FirstPlayerId"
+                        asp-items="@(new SelectList(Model.Users, "Id", "UserName"))">
+                    <option>@LocString[nameof(LocalizationKey.SelectOne)]</option>
+                </select>
+                <span asp-validation-for="FirstPlayerId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SecondPlayerId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.SecondPlayer)]</label>
+            <div class="col-md-10">
+                <select asp-for="SecondPlayerId"
+                        asp-items="@(new SelectList(Model.Users, "Id", "UserName"))">
+                    <option>@LocString[nameof(LocalizationKey.SelectOne)]</option>
+                </select>
+                <span asp-validation-for="SecondPlayerId" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FirstPlayerScore" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.FirstPlayerScore)]</label>
+            <div class="col-md-10">
+                <input asp-for="FirstPlayerScore" class="form-control"/>
+                <span asp-validation-for="FirstPlayerScore" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SecondPlayerScore" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.SecondPlayerScore)]</label>
+            <div class="col-md-10">
+                <input asp-for="SecondPlayerScore" class="form-control" />
+                <span asp-validation-for="SecondPlayerScore" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" name="torating" value="false" class="btn btn-default">
+                    @LocString[nameof(LocalizationKey.AddThisAndAnotherOne)]
+                </button>
+                <button type="submit" name="torating" value="true" class="btn btn-default">
+                    @LocString[nameof(LocalizationKey.AddThisAndGoToRating)]
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

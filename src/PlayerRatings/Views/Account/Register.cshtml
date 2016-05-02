@@ -1,0 +1,84 @@
+﻿@using System.Threading.Tasks
+@using PlayerRatings.Localization
+@model RegisterViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = @LocString[nameof(LocalizationKey.Register)];
+}
+
+<h2>@ViewData["Title"].</h2>
+<div class="row">
+    <div class="col-md-8">
+        <section>
+            <form asp-controller="Account" asp-action="Register" asp-route-inviteid="@ViewData["InviteId"]" method="post" class="form-horizontal" role="form">
+                <h4>@LocString[nameof(LocalizationKey.CreateNewAccount)].</h4>
+                <hr/>
+                <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Email" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.Email)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="Email" class="form-control"/>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DisplayName" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.DisplayName)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="DisplayName" class="form-control" />
+                        <span asp-validation-for="DisplayName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.Password)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="Password" class="form-control"/>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.ConfirmPassword)]</label>
+                    <div class="col-md-10">
+                        <input asp-for="ConfirmPassword" class="form-control"/>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-default">@LocString[nameof(LocalizationKey.Register)]</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+    <div class="col-md-4">
+        <section>
+            <h4>@LocString[nameof(LocalizationKey.UseAnotherService)].</h4>
+            <hr/>
+            @{
+                var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                if (loginProviders.Count != 0)
+                {
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" asp-route-inviteid="@ViewData["InviteId"]" method="post" class="form-horizontal" role="form">
+                        <div>
+                            <p>
+                                @foreach (var provider in loginProviders)
+                                {
+                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    @LocString[nameof(LocalizationKey.HasNoConfiguredServices)]
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

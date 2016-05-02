@@ -1,0 +1,30 @@
+﻿@using System.Security.Claims
+@using PlayerRatings.Localization
+@using PlayerRatings.Util
+
+@inject UserManager<ApplicationUser> UserManager;
+
+@{
+    var appUser = await User.GetApplicationUser(UserManager);
+}
+
+@if (User.IsSignedIn())
+{
+    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a asp-controller="Manage" asp-action="Index" title="Manage">@LocString[nameof(LocalizationKey.Hello)] @(appUser?.DisplayName)!</a>
+            </li>
+            <li>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">@LocString[nameof(LocalizationKey.LogOff)]</button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-controller="Account" asp-action="Register">@LocString[nameof(LocalizationKey.Register)]</a></li>
+        <li><a asp-controller="Account" asp-action="Login">@LocString[nameof(LocalizationKey.LogIn)]</a></li>
+    </ul>
+}
