@@ -1,16 +1,38 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@using PlayerRatings.Localization
+
+@{
+    ViewData["Title"] = "Player Ratings";
 }
 
-<h3>@ViewData["Message"]</h3>
+@model PlayerRatings.ViewModels.Home.IndexViewModel
 
-@*
+&nbsp;
+<div class="jumbotron text-center">
     <div class="row">
-        <div class="col-md-3">
-            <h2></h2>
-            <ul>
-                <li></li>
-            </ul>
+        <div class="col-lg-4">
+            <div class="well material-background-red well-info-index">
+                <h1>@LocString[nameof(LocalizationKey.Leagues)]</h1>
+                <span>@Model.Leagues</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="well material-background-green well-info-index">
+                <h1>@LocString[nameof(LocalizationKey.Players)]</h1>
+                <span>@Model.Players</span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="well material-background-orange well-info-index">
+                <h1>@LocString[nameof(LocalizationKey.Matches)]</h1>
+                <span>@Model.Matches</span>
+            </div>
         </div>
     </div>
-*@
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <a asp-action="Create" asp-controller="Leagues" class="btn btn-default btn-lg btn-block btn-success">@LocString[nameof(LocalizationKey.CreateYourLeague)]</a>
+        </div>
+    </div>
+</div>

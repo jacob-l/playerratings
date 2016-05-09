@@ -16,3 +16,24 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.material-background-red {
+    background-color: #FF5722;
+}
+
+.material-background-green {
+    background-color: #8BC34A;
+}
+
+.material-background-orange {
+    background-color: #FFA000;
+}
+
+.well-info-index {
+    color: #FFFFFF;
+}
+
+.well-info-index span{
+    font-size: 100px;
+}
+

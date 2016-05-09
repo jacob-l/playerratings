@@ -70,6 +70,9 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey CreateNewAccount = new LocalizationKey("Create a new account",
             "Создание нового аккаунта");
 
+        public static readonly LocalizationKey CreateYourLeague = new LocalizationKey("Create your league",
+            "Создай свою лигу");
+
         public static readonly LocalizationKey Date = new LocalizationKey("Date", "Дата");
 
         public static readonly LocalizationKey DateIndex = new LocalizationKey("Index of Date column",
@@ -205,6 +208,9 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey PlayerNotFound =
             new LocalizationKey("Can not find player or you don't have access",
                 "Не могу найти игрока или у вас нет доступа");
+
+        public static readonly LocalizationKey Players =
+            new LocalizationKey("Players", "Игроки");
 
         public static readonly LocalizationKey Rating = new LocalizationKey("Rating", "Рейтинг");
 

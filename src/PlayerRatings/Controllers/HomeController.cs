@@ -1,20 +1,29 @@
 ﻿using System;
+using System.Linq;
 using System.Globalization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.OptionsModel;
 using PlayerRatings.Localization;
+using PlayerRatings.ViewModels.Home;
+using PlayerRatings.Models;
 
 namespace PlayerRatings.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly IStringLocalizer<HomeController> _localizer;
         private readonly ILanguageData _languageData;
         private readonly IOptions<AppSettings> _settings;
 
-        public HomeController(IStringLocalizer<HomeController> localizer, ILanguageData languageData, IOptions<AppSettings> settings)
+        public HomeController(
+            ApplicationDbContext context,
+            IStringLocalizer<HomeController> localizer,
+            ILanguageData languageData,
+            IOptions<AppSettings> settings)
         {
+            _context = context;
             _localizer = localizer;
             _languageData = languageData;
             _settings = settings;
@@ -22,7 +31,9 @@ namespace PlayerRatings.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel(_context.League.Count(), _context.Users.Count(), _context.Match.Count());
+
+            return View(model);
         }
 
         public IActionResult About()
