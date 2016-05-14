@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace PlayerRatings
 {
     public class AppSettings
@@ -14,5 +10,8 @@ namespace PlayerRatings
         public string GoogleClientId { get; set; }
 
         public string GoogleClientSecret { get; set; }
+
+        //Web analytics service - https://metrica.yandex.com/
+        public string YandexMetricaId { get; set; }
     }
 }
