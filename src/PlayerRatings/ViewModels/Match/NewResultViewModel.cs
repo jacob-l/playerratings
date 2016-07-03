@@ -26,6 +26,8 @@ namespace PlayerRatings.ViewModels.Match
         public Guid LeagueId { get; set; }
 
         [Required]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:o}")]
+        [DataType(DataType.DateTime)]
         public DateTimeOffset Date { get; set; }
 
         [Required]

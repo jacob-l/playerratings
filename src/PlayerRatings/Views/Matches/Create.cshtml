@@ -1,6 +1,8 @@
 ﻿@using PlayerRatings.Localization
 @model PlayerRatings.ViewModels.Match.NewResultViewModel
 
+@inject ILanguageData LanguageData
+
 @{
     ViewData["Title"] = LocString[nameof(LocalizationKey.Create)];
 }
@@ -22,7 +24,9 @@
         <div class="form-group">
             <label asp-for="Date" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.Date)]</label>
             <div class="col-md-10">
-                <input asp-for="Date" class="form-control" />
+                <!-- If js is enabled, next field will be hidden and replaced by the next one with attached js calendar -->
+                <input asp-for="Date" class="form-control mvc-date-field" />
+                <input class="form-control date" style="display:none" data-locale="@LanguageData.CurrentLanguage"/>
                 <span asp-validation-for="Date" class="text-danger" />
             </div>
         </div>
@@ -73,6 +77,57 @@
     </div>
 </form>
 
+@section Styles
+{
+    <link rel="stylesheet" href="~/lib/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+}
+
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="~/lib/moment/min/moment.min.js"></script>
+    <script src="~/lib/moment/min/locales.min.js"></script>
+    <script src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        if (!Date.prototype.toISOString) {
+            (function () {
+
+                function pad(number) {
+                    var r = String(number);
+                    if (r.length === 1) {
+                        r = '0' + r;
+                    }
+                    return r;
+                }
+
+                Date.prototype.toISOString = function () {
+                    return this.getUTCFullYear()
+                      + '-' + pad(this.getUTCMonth() + 1)
+                      + '-' + pad(this.getUTCDate())
+                      + 'T' + pad(this.getUTCHours())
+                      + ':' + pad(this.getUTCMinutes())
+                      + ':' + pad(this.getUTCSeconds())
+                      + '.' + String((this.getUTCMilliseconds() / 1000).toFixed(3)).slice(2, 5)
+                      + 'Z';
+                };
+
+            }());
+        }
+
+        $(function () {
+            $('.date').each(function (index, element) {
+                var item = $(element);
+                var mvcField = item.siblings('.mvc-date-field');
+                mvcField.hide();
+                item.show();
+                item.datetimepicker({
+                    locale: item.data('locale'),
+                    defaultDate: new Date(mvcField.val())
+                });
+                item.on('dp.change', function (e) {
+                    mvcField.val(e.date.toISOString());
+                });
+            });
+        });
+    </script>
 }
