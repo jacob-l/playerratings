@@ -54,6 +54,7 @@
                                         {
                                             <li>
                                                 <form asp-controller="Home" asp-action="ChangeLanguage" method="post" role="form">
+                                                    <input type="hidden" name="curUrl" value="@Context.Request.Path" />
                                                     <button type="submit" class="btn btn-lg btn-block" style="background-color: white" name="language" value="@language" title="@language">
 
                                                         @LocString[language]

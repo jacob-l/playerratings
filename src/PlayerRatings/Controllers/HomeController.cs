@@ -62,10 +62,11 @@ namespace PlayerRatings.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ChangeLanguage(string language)
+        public IActionResult ChangeLanguage(string language, string curUrl)
         {
             Response.Cookies.Append(_languageData.CookieName, language);
-            return Redirect("/");
+
+            return Redirect(curUrl);
         }
     }
 }

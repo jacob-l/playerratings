@@ -9,7 +9,7 @@ namespace PlayerRatings.ViewModels.Match
         public NewResultViewModel()
         { }
 
-        public NewResultViewModel(IEnumerable<Models.League> leagues, IEnumerable<Models.ApplicationUser> users)
+        public NewResultViewModel(IEnumerable<Models.League> leagues, Dictionary<Models.ApplicationUser, IEnumerable<Guid>> users)
         {
             Leagues = leagues;
 
@@ -20,7 +20,7 @@ namespace PlayerRatings.ViewModels.Match
 
         public IEnumerable<Models.League> Leagues { get; set; }
 
-        public IEnumerable<Models.ApplicationUser> Users { get; set; }
+        public Dictionary<Models.ApplicationUser, IEnumerable<Guid>> Users { get; set; }
 
         [Required]
         public Guid LeagueId { get; set; }

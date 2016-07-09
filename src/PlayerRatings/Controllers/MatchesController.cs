@@ -81,12 +81,10 @@ namespace PlayerRatings.Controllers
                     .ToList();
         }
 
-        private ICollection<ApplicationUser> GetUsers(IEnumerable<Guid> leagueIds)
+        private Dictionary<ApplicationUser, IEnumerable<Guid>> GetUsers(IEnumerable<Guid> leagueIds)
         {
-            return _context.LeaguePlayers.Where(lp => leagueIds.Contains(lp.LeagueId) && !lp.IsBlocked)
-                .Select(lp => lp.User)
-                .Distinct()
-                .ToList();
+            return _context.LeaguePlayers.Where(lp => leagueIds.Contains(lp.LeagueId) && !lp.IsBlocked).Include(lp => lp.User).ToList()
+                .GroupBy(lp => lp.User).ToDictionary(g => g.Key, g => g.Select(lp => lp.LeagueId).ToList().AsEnumerable());
         }
 
         // GET: /<controller>/
@@ -103,8 +101,39 @@ namespace PlayerRatings.Controllers
             {
                 LeagueId = leagues.First().Id,
                 FirstPlayerId = currentUser.Id,
-                SecondPlayerId = players.Except(new [] { currentUser }).FirstOrDefault()?.Id
+                SecondPlayerId = players.Keys.Except(new [] { currentUser }).FirstOrDefault()?.Id
             });
+        }
+
+        /// <summary>
+        /// Verifies that passed user is visible for current user and adds to league
+        /// </summary>
+        /// <param name="playerId">New league player id</param>
+        /// <param name="league">League</param>
+        /// <returns>League player or null</returns>
+        private async Task<ApplicationUser> AddToLeague(string playerId, League league)
+        {
+            var currentUser = await User.GetApplicationUser(_userManager);
+
+            var leagues = GetLeagues(currentUser, league.Id);
+
+            var leagueIds = leagues.Select(l => l.Id).ToList();
+            //We use GetUsers to verify that invitee is visible for current user
+            var player = GetUsers(leagueIds).Keys.FirstOrDefault(p => p.Id == playerId);
+
+            if (player != null && !_context.LeaguePlayers.Any(lp => lp.LeagueId == league.Id && lp.UserId == player.Id))
+            {
+                _context.LeaguePlayers.Add(new LeaguePlayer
+                {
+                    Id = Guid.NewGuid(),
+                    League = league,
+                    User = player
+                });
+
+                _context.SaveChanges();
+            }
+
+            return player;
         }
 
         [HttpPost]
@@ -127,11 +156,12 @@ namespace PlayerRatings.Controllers
                     return View("Create", model);
                 }
 
-                var players =
-                _context.LeaguePlayers.Where(lp => lp.LeagueId == league.Id && !lp.IsBlocked).Select(lp => lp.User).ToList();
+                var players = GetUsers(new[] { league.Id });
 
-                var firstPlayer = players.FirstOrDefault(p => p.Id == model.FirstPlayerId);
-                var secondPlayer = players.FirstOrDefault(p => p.Id == model.SecondPlayerId);
+                var firstPlayer = players.Keys.FirstOrDefault(p => p.Id == model.FirstPlayerId) ??
+                    await AddToLeague(model.FirstPlayerId, league);
+                var secondPlayer = players.Keys.FirstOrDefault(p => p.Id == model.SecondPlayerId) ??
+                    await AddToLeague(model.SecondPlayerId, league);
 
                 if (firstPlayer == null || secondPlayer == null)
                 {
@@ -187,10 +217,10 @@ namespace PlayerRatings.Controllers
 
             var leagues = new[] { match.League };
             var leagueIds = leagues.Select(l => l.Id).ToList();
-            var players =
-                _context.LeaguePlayers.Where(lp => leagueIds.Contains(lp.LeagueId)).Select(lp => lp.User).ToList();
 
-            return View("Create", new NewResultViewModel(leagues, players)
+            ViewBag.Editing = true;
+
+            return View("Create", new NewResultViewModel(leagues, GetUsers(leagueIds))
             {
                 LeagueId = leagues.First().Id,
                 FirstPlayerId = match.FirstPlayerId,
@@ -250,6 +280,8 @@ namespace PlayerRatings.Controllers
                     leagueId
                 });
             }
+
+            ViewBag.Editing = true;
 
             return View("Create", model);
         }
@@ -339,7 +371,8 @@ namespace PlayerRatings.Controllers
             {
                 return HttpNotFound();
             }
-            var matches = new[] {model.File}.SelectMany(f =>
+
+            var matches = new[] { model.File }.SelectMany(f =>
             {
                 using (var stream = f.OpenReadStream())
                 {

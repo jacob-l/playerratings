@@ -16,7 +16,8 @@
             <label asp-for="LeagueId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.League)]</label>
             <div class="col-md-10">
                 <select asp-for="LeagueId"
-                        asp-items="@(new SelectList(Model.Leagues, "Id", "Name"))">
+                        asp-items="@(new SelectList(Model.Leagues, "Id", "Name"))"
+                        class="league-selector">
                 </select>
                 <span asp-validation-for="LeagueId" class="text-danger" />
             </div>
@@ -33,9 +34,12 @@
         <div class="form-group">
             <label asp-for="FirstPlayerId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.FirstPlayer)]</label>
             <div class="col-md-10">
-                <select asp-for="FirstPlayerId"
-                        asp-items="@(new SelectList(Model.Users, "Id", "UserName"))">
+                <select asp-for="FirstPlayerId" class="player-selector">
                     <option>@LocString[nameof(LocalizationKey.SelectOne)]</option>
+                    @foreach (var pair in Model.Users)
+                    {
+                        <option value="@pair.Key.Id" data-leagueIds="@string.Join(",", pair.Value.Select(v => v.ToString()))">@pair.Key.DisplayName</option>
+                    }
                 </select>
                 <span asp-validation-for="FirstPlayerId" class="text-danger" />
             </div>
@@ -43,9 +47,12 @@
         <div class="form-group">
             <label asp-for="SecondPlayerId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.SecondPlayer)]</label>
             <div class="col-md-10">
-                <select asp-for="SecondPlayerId"
-                        asp-items="@(new SelectList(Model.Users, "Id", "UserName"))">
+                <select asp-for="SecondPlayerId" class="player-selector">
                     <option>@LocString[nameof(LocalizationKey.SelectOne)]</option>
+                    @foreach (var pair in Model.Users)
+                    {
+                        <option value="@pair.Key.Id" data-leagueIds="@string.Join(",", pair.Value.Select(v => v.ToString()))">@pair.Key.DisplayName</option>
+                    }
                 </select>
                 <span asp-validation-for="SecondPlayerId" class="text-danger" />
             </div>
@@ -66,12 +73,21 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" name="torating" value="false" class="btn btn-default">
-                    @LocString[nameof(LocalizationKey.AddThisAndAnotherOne)]
-                </button>
-                <button type="submit" name="torating" value="true" class="btn btn-default">
-                    @LocString[nameof(LocalizationKey.AddThisAndGoToRating)]
-                </button>
+                @if (ViewBag.Editing ?? false)
+                {
+                    <button type="submit" class="btn btn-default">
+                        @LocString[nameof(LocalizationKey.Save)]
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" name="torating" value="false" class="btn btn-default">
+                        @LocString[nameof(LocalizationKey.AddThisAndAnotherOne)]
+                    </button>
+                    <button type="submit" name="torating" value="true" class="btn btn-default">
+                        @LocString[nameof(LocalizationKey.AddThisAndGoToRating)]
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -127,6 +143,46 @@
                 item.on('dp.change', function (e) {
                     mvcField.val(e.date.toISOString());
                 });
+            });
+
+            var playerSelectors = [];
+            $('.player-selector').each(function (index, element) {
+                var item = $(element);
+
+                item.initialOptions = item.children();
+                playerSelectors.push(item);
+            });
+
+            function filterPlayerSelectors(leagueId)
+            {
+                for (var key in playerSelectors) {
+                    item = playerSelectors[key];
+
+                    var currentSelection = item.val();
+                    item.empty();
+
+                    for (var i = 0; i < item.initialOptions.length; i++) {
+                        var option = $(item.initialOptions[i]).clone();
+                        if (!option.data('leagueids') || option.data('leagueids').indexOf(leagueId) >= 0) {
+                            item.append(option);
+                        }
+                    }
+
+                    if (item.children("option[value='" + currentSelection + "']").length) {
+                        item.val(currentSelection);
+                    } else {
+                        item[0].selectedIndex = 0;
+                    }
+                }
+            }
+
+            $('.league-selector').each(function (index, element) {
+                filterPlayerSelectors(element.value);
+            });
+
+            $('.league-selector').change(function (event) {
+                var leagueId = event.currentTarget.value;
+                filterPlayerSelectors(leagueId);
             });
         });
     </script>

@@ -155,7 +155,7 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey InvitationForm = new LocalizationKey("Invintation Form",
             "Форма приглашения");
 
-        public static readonly LocalizationKey Invite = new LocalizationKey("Invite", "Приглашение");
+        public static readonly LocalizationKey Invite = new LocalizationKey("Invite", "Пригласить");
 
         public static readonly LocalizationKey InvitedYou =
             new LocalizationKey("{0} invited you to join the rating system",
@@ -256,7 +256,7 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey SecondPlayerScoreIndex =
             new LocalizationKey("Index of Second Player Score column", "Номер колонки со счетом второго игрока");
 
-        public static readonly LocalizationKey SelectOne = new LocalizationKey("Please select one", "Выберите одного");
+        public static readonly LocalizationKey SelectOne = new LocalizationKey("Please select one", "Выберите игрока");
         public static readonly LocalizationKey SetPassword = new LocalizationKey("Set Password", "Установить пароль");
         public static readonly LocalizationKey Submit = new LocalizationKey("Submit", "Отправить");
 
@@ -287,6 +287,9 @@ namespace PlayerRatings.Localization
 
         public static readonly LocalizationKey YourPasswordHasBeenReset =
             new LocalizationKey("Your password has been reset", "Ваш пароль был сброшен");
+
+        public static readonly LocalizationKey YouCanInviteNewPlayer =
+            new LocalizationKey("You can invite new player to the league", "Вы можете добавить нового игрока в лигу");
 
         public static readonly LocalizationKey YouSuccessfullyAuthenticatedWith =
             new LocalizationKey("You've successfully authenticated with", "Вы успешно зашли через");
