@@ -27,7 +27,7 @@
             <div class="col-md-10">
                 <!-- If js is enabled, next field will be hidden and replaced by the next one with attached js calendar -->
                 <input asp-for="Date" class="form-control mvc-date-field" />
-                <input class="form-control date" style="display:none" data-locale="@LanguageData.CurrentLanguage"/>
+                <input class="form-control bootstrap-date" style="display:none" data-locale="@LanguageData.CurrentLanguage"/>
                 <span asp-validation-for="Date" class="text-danger" />
             </div>
         </div>
@@ -131,7 +131,7 @@
         }
 
         $(function () {
-            $('.date').each(function (index, element) {
+            $('.bootstrap-date').each(function (index, element) {
                 var item = $(element);
                 var mvcField = item.siblings('.mvc-date-field');
                 mvcField.hide();
