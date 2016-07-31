@@ -94,8 +94,14 @@ namespace PlayerRatings.Controllers
 
             var leagues = GetLeagues(currentUser, leagueId);
 
+            if (!leagues.Any())
+            {
+                return View("NoLeagues");
+            }
+
             var leagueIds = leagues.Select(l => l.Id).ToList();
             var players = GetUsers(leagueIds);
+
 
             return View("Create", new NewResultViewModel(leagues, players)
             {

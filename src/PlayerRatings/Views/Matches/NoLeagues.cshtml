@@ -1,0 +1,14 @@
+﻿@using PlayerRatings.Localization
+
+@{
+    ViewBag.Title = LocString[nameof(LocalizationKey.NoLeagues)];
+}
+
+<h3></h3>
+
+<div>
+    <p>
+        @LocString[nameof(LocalizationKey.NoLeagues)].
+        <a asp-action="Create" asp-controller="Leagues">@LocString[nameof(LocalizationKey.CreateNew)]</a>
+    </p>
+</div>

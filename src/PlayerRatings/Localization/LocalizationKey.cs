@@ -4,16 +4,14 @@ using System.Reflection;
 
 namespace PlayerRatings.Localization
 {
-    //To sort static fields you can user resharper, for example.
-    //Go to Resharper->Options->Languages->C#->File Layout
+    //To sort static fields you can use resharper, for example.
+    //Go to Resharper->Options->Code Editing->C#->File Layout
     //Choose Static Fields and Constants
-    //Select "Sort By" - Name
+    //Select "Sort By" - Access. And then by Name
+    //Call Resharper->Tools->Clean up
     //http://stackoverflow.com/questions/1509244/resharper-clean-up-code-how-to-affect-sorting-of-methods#answer-31734205
     public class LocalizationKey
     {
-        private const string En = "en";
-        private const string Ru = "ru";
-
         public static readonly LocalizationKey AddAnotherServiceToLogin =
             new LocalizationKey("Add another service to log in", "Добавить привязку к внешнему сервису");
 
@@ -195,6 +193,10 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey Match = new LocalizationKey("Match", "Матч");
         public static readonly LocalizationKey Matches = new LocalizationKey("Matches", "Матчи");
         public static readonly LocalizationKey NewPassword = new LocalizationKey("New password", "Новый пароль");
+
+        public static readonly LocalizationKey NoLeagues =
+            new LocalizationKey("You have no leagues", "У вас нету ни одной лиги");
+
         public static readonly LocalizationKey OldPassword = new LocalizationKey("Old password", "Старый пароль");
 
         public static readonly LocalizationKey Password = new LocalizationKey("Password", "Пароль");
@@ -280,6 +282,9 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey WinRate = new LocalizationKey("Win rate", "Соотношение побед");
         public static readonly LocalizationKey WinStreak = new LocalizationKey("Win streak", "Победы подряд");
 
+        public static readonly LocalizationKey YouCanInviteNewPlayer =
+            new LocalizationKey("You can invite new player to the league", "Вы можете добавить нового игрока в лигу");
+
         public static readonly LocalizationKey YouDontHaveLocalAccount =
             new LocalizationKey(
                 "You do not have a local username/password for this site. Add a local account so you can log in without an external login",
@@ -288,11 +293,12 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey YourPasswordHasBeenReset =
             new LocalizationKey("Your password has been reset", "Ваш пароль был сброшен");
 
-        public static readonly LocalizationKey YouCanInviteNewPlayer =
-            new LocalizationKey("You can invite new player to the league", "Вы можете добавить нового игрока в лигу");
-
         public static readonly LocalizationKey YouSuccessfullyAuthenticatedWith =
             new LocalizationKey("You've successfully authenticated with", "Вы успешно зашли через");
+
+        private const string En = "en";
+
+        private const string Ru = "ru";
 
         private readonly Dictionary<string, string> _values;
 

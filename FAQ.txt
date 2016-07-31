@@ -5,11 +5,13 @@ Press add(green plus) button.
 Name: aspnet-contrib
 Source: https://www.myget.org/F/aspnet-contrib/api/v3/index.json
 
+Press Update and Ok
 
 *****How to cofigure app secrets?******
 Details: https://github.com/aspnet/Home/wiki/DNX-Secret-Configuration
 1. Go to playerratings\src\PlayerRatings
-2. Call dnu commands install Microsoft.Extensions.SecretManager
+2. Call:
+dnu commands install Microsoft.Extensions.SecretManager
 3. Add necessary appsetting. See all possible settings at playerratings\src\PlayerRatings\AppSettings.cs
 For example, let's confugure Google OAuth
 Call:
