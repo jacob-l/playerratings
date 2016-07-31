@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Moq;
 using PlayerRatings.Models;
+using PlayerRatings.Repositories;
 using PlayerRatings.Services;
 
 namespace PlayerRatings.UnitTests.Controllers
@@ -31,7 +32,7 @@ namespace PlayerRatings.UnitTests.Controllers
 
         private Mock<IStringLocalizer<MatchesController>> StringLocalizerMock { get; } = new Mock<IStringLocalizer<MatchesController>>();
         private Mock<IInvitesService> InviteServiceMock { get; } = new Mock<IInvitesService>();
-
+        private Mock<ILeaguesRepository> LeaguesRepositoryMock { get; } = new Mock<ILeaguesRepository>();
 
         public MatchesControllerTests()
         {
@@ -72,7 +73,8 @@ namespace PlayerRatings.UnitTests.Controllers
             var httpContext = new Mock<HttpContext>();
             httpContext.SetupProperty(o => o.User, validPrincipal);
 
-            var controller = new MatchesController(Context, UserManager, StringLocalizerMock.Object, InviteServiceMock.Object)
+            var controller = new MatchesController(Context, UserManager, StringLocalizerMock.Object,
+                InviteServiceMock.Object, LeaguesRepositoryMock.Object)
             {
                 ActionContext = new ActionContext
                 {
@@ -84,7 +86,8 @@ namespace PlayerRatings.UnitTests.Controllers
             var result = await controller.Create(null);
 
             // Assert
-            result.Should().BeOfType<ViewResult>().Which.ViewName.Should().Be("NoLeagues");
+            result.Should().BeOfType<RedirectToActionResult>().Which.ControllerName.Should().Be("Leagues");
+            result.Should().BeOfType<RedirectToActionResult>().Which.ActionName.Should().Be("NoLeagues");
         }
     }
 }

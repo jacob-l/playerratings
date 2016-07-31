@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using PlayerRatings.Localization;
 using PlayerRatings.Models;
+using PlayerRatings.Repositories;
 using PlayerRatings.Services;
 
 namespace PlayerRatings
@@ -80,6 +81,8 @@ namespace PlayerRatings
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<ILanguageData, CustomStringLocalizerFactory>();
             services.AddTransient<IInvitesService, InvitesService>();
+
+            services.AddTransient<ILeaguesRepository, LeaguesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Csv;
 using PlayerRatings.Localization;
+using PlayerRatings.Repositories;
 using PlayerRatings.Services;
 
 namespace PlayerRatings.Controllers
@@ -23,14 +24,16 @@ namespace PlayerRatings.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStringLocalizer<MatchesController> _localizer;
         private readonly IInvitesService _invitesService;
+        private readonly ILeaguesRepository _leaguesRepository;
 
         public MatchesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            IStringLocalizer<MatchesController> localizer, IInvitesService invitesService)
+            IStringLocalizer<MatchesController> localizer, IInvitesService invitesService, ILeaguesRepository leaguesRepository)
         {
             _context = context;
             _userManager = userManager;
             _localizer = localizer;
             _invitesService = invitesService;
+            _leaguesRepository = leaguesRepository;
         }
 
         public async Task<IActionResult> Index(Guid leagueId, int page = 0)
@@ -39,7 +42,7 @@ namespace PlayerRatings.Controllers
 
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = LeaguesController.GetAuthorizedLeague(leagueId, currentUser.Id, _context);
+            var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, leagueId);
 
             if (league == null)
             {
@@ -92,11 +95,11 @@ namespace PlayerRatings.Controllers
         {
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var leagues = GetLeagues(currentUser, leagueId);
+            var leagues = GetLeagues(currentUser, null);
 
             if (!leagues.Any())
             {
-                return View("NoLeagues");
+                return RedirectToAction("NoLeagues", "Leagues");
             }
 
             var leagueIds = leagues.Select(l => l.Id).ToList();
@@ -150,7 +153,7 @@ namespace PlayerRatings.Controllers
 
             if (ModelState.IsValid)
             {
-                var league = LeaguesController.GetAuthorizedLeague(model.LeagueId, currentUser.Id, _context);
+                var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, model.LeagueId);
 
                 if (league == null)
                 {
@@ -251,7 +254,7 @@ namespace PlayerRatings.Controllers
 
                 var currentUser = await User.GetApplicationUser(_userManager);
 
-                var league = LeaguesController.GetAuthorizedLeague(model.LeagueId, currentUser.Id, _context);
+                var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, model.LeagueId);
 
                 if (league == null)
                 {
@@ -324,7 +327,7 @@ namespace PlayerRatings.Controllers
 
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = LeaguesController.GetAuthorizedLeague(match.LeagueId, currentUser.Id, _context);
+            var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, match.LeagueId);
 
             if (league == null)
             {
@@ -346,7 +349,7 @@ namespace PlayerRatings.Controllers
         {
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = LeaguesController.GetAuthorizedLeague(leagueId, currentUser.Id, _context);
+            var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, leagueId);
 
             if (league == null)
             {
@@ -371,7 +374,7 @@ namespace PlayerRatings.Controllers
         {
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = LeaguesController.GetAuthorizedLeague(model.LeagueId, currentUser.Id, _context);
+            var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, model.LeagueId);
 
             if (league == null)
             {

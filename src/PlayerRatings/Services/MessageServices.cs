@@ -30,11 +30,16 @@ namespace PlayerRatings.Services
                 Text = body
             };
 
+            if (string.IsNullOrEmpty(_settings.Value.SmtpUserName) ||
+                string.IsNullOrEmpty(_settings.Value.SmtpPassword))
+            {
+                return;
+            }
+
             using (var client = new SmtpClient())
             {
                 client.Connect("smtp.sendgrid.net", 587, false);
 
-                // Note: only needed if the SMTP server requires authentication
                 client.Authenticate(_settings.Value.SmtpUserName, _settings.Value.SmtpPassword);
 
                 await client.SendAsync(message);

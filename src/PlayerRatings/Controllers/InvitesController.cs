@@ -9,6 +9,9 @@ using PlayerRatings.ViewModels.Invites;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+using PlayerRatings.Localization;
+using PlayerRatings.Repositories;
 
 namespace PlayerRatings.Controllers
 {
@@ -18,28 +21,17 @@ namespace PlayerRatings.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInvitesService _invitesService;
+        private readonly ILeaguesRepository _leaguesRepository;
+        private readonly IStringLocalizer<InvitesController> _localizer;
 
-        public InvitesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IInvitesService invitesService)
+        public InvitesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            IInvitesService invitesService, ILeaguesRepository leaguesRepository, IStringLocalizer<InvitesController> localizer)
         {
             _context = context;
             _userManager = userManager;
             _invitesService = invitesService;
-        }
-
-        private League GetAuthorizedLeague(Guid id, ApplicationUser user)
-        {
-            var league = _context.League.Single(m => m.Id == id);
-            if (league == null)
-            {
-                return null;
-            }
-
-            if (!_context.LeaguePlayers.Any(lp => lp.LeagueId == id && lp.UserId == user.Id))
-            {
-                return null;
-            }
-
-            return league;
+            _leaguesRepository = leaguesRepository;
+            _localizer = localizer;
         }
 
         // GET: Invites
@@ -53,22 +45,23 @@ namespace PlayerRatings.Controllers
         // GET: Invites/Create
         public async Task<IActionResult> Create(Guid? leagueId)
         {
-            if (leagueId == null)
-            {
-                return View();
-            }
             var currentUser = await User.GetApplicationUser(_userManager);
+            var leagues = _leaguesRepository.GetLeagues(currentUser).ToList();
 
-            var league = GetAuthorizedLeague(leagueId.Value, currentUser);
-
-            if (league == null)
+            if (leagueId.HasValue && _leaguesRepository.GetUserAuthorizedLeague(currentUser, leagueId.Value) == null)
             {
                 return HttpNotFound();
             }
 
+            if (!leagues.Any())
+            {
+                return RedirectToAction("NoLeagues", "Leagues");
+            }
+
             return View(new InviteViewModel
             {
-                LeagueId = leagueId
+                LeagueId = leagueId,
+                Leagues = leagues
             });
         }
 
@@ -79,33 +72,36 @@ namespace PlayerRatings.Controllers
         {
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            if (ModelState.IsValid)
+            invite.Leagues = _leaguesRepository.GetLeagues(currentUser);
+
+            if (!ModelState.IsValid)
             {
-                League league = null;
-                if (invite.LeagueId.HasValue)
-                {
-                    league = GetAuthorizedLeague(invite.LeagueId.Value, currentUser);
-
-                    if (league == null)
-                    {
-                        return HttpNotFound();
-                    }
-                }
-
-                try
-                {
-                    await _invitesService.Invite(invite.Email, currentUser, league);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
-                    return View(invite);
-                }
-
-                return RedirectToAction("Index");
+                return View(invite);
             }
 
-            return View(invite);
+            League league = null;
+            if (invite.LeagueId.HasValue)
+            {
+                league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, invite.LeagueId.Value);
+
+                if (league == null)
+                {
+                    ModelState.AddModelError("", _localizer[nameof(LocalizationKey.LeagueNotFound)]);
+                    return View(invite);
+                }
+            }
+
+            try
+            {
+                await _invitesService.Invite(invite.Email, currentUser, league);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(invite);
+            }
+
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Edit(Guid id)

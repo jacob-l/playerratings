@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PlayerRatings.ViewModels.Invites
@@ -11,5 +12,7 @@ namespace PlayerRatings.ViewModels.Invites
         public string Email { get; set; }
 
         public Guid Id { get; set; }
+
+        public IEnumerable<Models.League> Leagues { get; set; }
     }
 }

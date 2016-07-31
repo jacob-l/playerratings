@@ -159,6 +159,9 @@ namespace PlayerRatings.Localization
             new LocalizationKey("{0} invited you to join the rating system",
                 "{0} пригласил Вас присоединиться к рейтингу");
 
+        public static readonly LocalizationKey InviteNew =
+            new LocalizationKey("Invite new player", "Пригласить нового пользователя");
+
         public static readonly LocalizationKey Invites = new LocalizationKey("Invites", "Приглашения");
         public static readonly LocalizationKey LastMatches = new LocalizationKey("Last matches", "Последние матчи");
         public static readonly LocalizationKey League = new LocalizationKey("League", "Лига");

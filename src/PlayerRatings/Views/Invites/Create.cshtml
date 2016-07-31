@@ -11,7 +11,15 @@
     <h4>@LocString[nameof(LocalizationKey.InvitationForm)]</h4>
     <hr />
     <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-    <input hidden asp-for="LeagueId" />
+    <div class="form-group">
+        <label asp-for="LeagueId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.League)]</label>
+        <div class="col-md-10">
+            <select asp-for="LeagueId"
+                    asp-items="@(new SelectList(Model.Leagues, "Id", "Name"))"
+                    class="league-selector"></select>
+            <span asp-validation-for="LeagueId" class="text-danger" />
+        </div>
+    </div>
     <div class="form-group">
         <label asp-for="Email" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.Email)]</label>
         <div class="col-md-10">

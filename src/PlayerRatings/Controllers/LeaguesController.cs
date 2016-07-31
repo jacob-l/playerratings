@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlayerRatings.Repositories;
 using PlayerRatings.Util;
 
 namespace PlayerRatings.Controllers
@@ -19,11 +20,14 @@ namespace PlayerRatings.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILeaguesRepository _leaguesRepository;
 
-        public LeaguesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public LeaguesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            ILeaguesRepository leaguesRepository)
         {
             _context = context;
             _userManager = userManager;
+            _leaguesRepository = leaguesRepository;
         }
 
         // GET: Leagues
@@ -32,26 +36,19 @@ namespace PlayerRatings.Controllers
             var currentUser = await User.GetApplicationUser(_userManager);
 
             return
-                View(
-                    _context.LeaguePlayers
-                        .Include(lp => lp.League)
-                        .Where(lp => lp.UserId == currentUser.Id)
-                        .Select(lp => lp.League)
-                        .Distinct()
-                        .ToList()
-                        .Select(l => new LeagueViewModel
-                        {
-                            Id = l.Id,
-                            Name = l.Name,
-                            CreatedByUserId = l.CreatedByUserId
-                        }));
+                View(_leaguesRepository.GetLeagues(currentUser).ToList().Select(l => new LeagueViewModel
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    CreatedByUserId = l.CreatedByUserId
+                }));
         }
 
         public async Task<IActionResult> Details(Guid id)
         {
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = GetAuthorizedLeague(id, currentUser.Id);
+            var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, id);
 
             if (league == null)
             {
@@ -63,6 +60,11 @@ namespace PlayerRatings.Controllers
                 League = league,
                 Players = _context.LeaguePlayers.Include(lp => lp.User).Where(lp => lp.LeagueId == league.Id).ToList()
             });
+        }
+
+        public IActionResult NoLeagues()
+        {
+            return View();
         }
 
         // GET: Leagues/Create
@@ -111,7 +113,7 @@ namespace PlayerRatings.Controllers
 
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = _context.League.SingleOrDefault(m => m.Id == id && m.CreatedByUserId == currentUser.Id);
+            var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, id.Value);
             if (league == null)
             {
                 return HttpNotFound();
@@ -128,8 +130,7 @@ namespace PlayerRatings.Controllers
             {
                 var currentUser = await User.GetApplicationUser(_userManager);
 
-                var league = _context.League.SingleOrDefault(m => m.Id == model.Id && m.CreatedByUserId == currentUser.Id);
-
+                var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, model.Id);
                 if (league == null)
                 {
                     return HttpNotFound();
@@ -157,7 +158,7 @@ namespace PlayerRatings.Controllers
 
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = _context.League.SingleOrDefault(m => m.Id == id && m.CreatedByUserId == currentUser.Id);
+            var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, id.Value);
             if (league == null)
             {
                 return HttpNotFound();
@@ -178,8 +179,7 @@ namespace PlayerRatings.Controllers
         {
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = _context.League.SingleOrDefault(m => m.Id == id && m.CreatedByUserId == currentUser.Id);
-
+            var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, id);
             if (league == null)
             {
                 return HttpNotFound();
@@ -203,8 +203,7 @@ namespace PlayerRatings.Controllers
                 return HttpNotFound();
             }
 
-            var league = _context.League.SingleOrDefault(m => m.Id == player.LeagueId && m.CreatedByUserId == currentUser.Id);
-
+            var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, player.LeagueId);
             if (league == null)
             {
                 return HttpNotFound();
@@ -228,7 +227,7 @@ namespace PlayerRatings.Controllers
 
             var currentUser = await User.GetApplicationUser(_userManager);
 
-            var league = GetAuthorizedLeague(id.Value, currentUser.Id);
+            var league = _leaguesRepository.GetUserAuthorizedLeague(currentUser, id.Value);
 
             if (league == null)
             {
@@ -293,27 +292,6 @@ namespace PlayerRatings.Controllers
             return
                 View(new RatingViewModel(stats, activeUsers.OrderByDescending(u => elo.GetResult(u)), forecast,
                     lastMatches));
-        }
-
-        private League GetAuthorizedLeague(Guid id, string userId)
-        {
-            return GetAuthorizedLeague(id, userId, _context);
-        }
-
-        public static League GetAuthorizedLeague(Guid id, string userId, ApplicationDbContext context)
-        {
-            var league = context.League.SingleOrDefault(m => m.Id == id);
-            if (league == null)
-            {
-                return null;
-            }
-
-            if (!context.LeaguePlayers.Any(lp => lp.LeagueId == id && lp.UserId == userId))
-            {
-                return null;
-            }
-
-            return league;
         }
     }
 }
