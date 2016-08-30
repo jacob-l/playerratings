@@ -13,5 +13,7 @@ namespace PlayerRatings
 
         //Web analytics service - https://metrica.yandex.com/
         public string YandexMetricaId { get; set; }
+
+        public string ContactEmail { get; set; }
     }
 }

@@ -41,6 +41,7 @@
                         <li><a asp-controller="Matches" asp-action="Create">@LocString[nameof(LocalizationKey.AddNewResult)]</a></li>
                         <li><a asp-controller="Leagues" asp-action="Index">@LocString[nameof(LocalizationKey.Leagues)]</a></li>
                         <li><a asp-controller="Invites" asp-action="Index">@LocString[nameof(LocalizationKey.Invites)]</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact">@LocString[nameof(LocalizationKey.Support)]</a></li>
                     </ul>
 
                     @await Html.PartialAsync("_LoginPartial")

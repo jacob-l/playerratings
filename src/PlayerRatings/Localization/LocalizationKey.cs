@@ -195,6 +195,7 @@ namespace PlayerRatings.Localization
 
         public static readonly LocalizationKey Match = new LocalizationKey("Match", "Матч");
         public static readonly LocalizationKey Matches = new LocalizationKey("Matches", "Матчи");
+        public static readonly LocalizationKey Message = new LocalizationKey("Message", "Сообщение");
         public static readonly LocalizationKey NewPassword = new LocalizationKey("New password", "Новый пароль");
 
         public static readonly LocalizationKey NoLeagues =
@@ -264,6 +265,7 @@ namespace PlayerRatings.Localization
         public static readonly LocalizationKey SelectOne = new LocalizationKey("Please select one", "Выберите игрока");
         public static readonly LocalizationKey SetPassword = new LocalizationKey("Set Password", "Установить пароль");
         public static readonly LocalizationKey Submit = new LocalizationKey("Submit", "Отправить");
+        public static readonly LocalizationKey Support = new LocalizationKey("Support", "Поддержка");
 
         public static readonly LocalizationKey ThankYouForConfirm =
             new LocalizationKey("Thank you for confirming your email", "Спасибо за подтверждение вашего адреса");
@@ -292,6 +294,12 @@ namespace PlayerRatings.Localization
             new LocalizationKey(
                 "You do not have a local username/password for this site. Add a local account so you can log in without an external login",
                 "У вас нету локального аккаунта в системе. Добавьте аккаунт, чтобы заходить в систему без внешних сервисов");
+
+        public static readonly LocalizationKey YourContactDetails =
+            new LocalizationKey("Your contact details", "Ваши контактные данные");
+
+        public static readonly LocalizationKey YourMessageIsSent =
+            new LocalizationKey("Your message has been sent", "Ваше сообщение отправлено");
 
         public static readonly LocalizationKey YourPasswordHasBeenReset =
             new LocalizationKey("Your password has been reset", "Ваш пароль был сброшен");
