@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
 namespace PlayerRatings.Localization
@@ -35,7 +35,7 @@ namespace PlayerRatings.Localization
                 return DefaultLanguage;
             }
 
-            var langCookie = _contextAccessor.HttpContext.Request.Cookies[CookieName].FirstOrDefault();
+            var langCookie = _contextAccessor.HttpContext.Request.Cookies[CookieName];
             var lang = string.IsNullOrEmpty(langCookie) || !ValidLanguages.Contains(langCookie)
                 ? CultureInfo.CurrentCulture.TwoLetterISOLanguageName
                 : langCookie;

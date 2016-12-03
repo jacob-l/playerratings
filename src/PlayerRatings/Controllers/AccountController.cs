@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PlayerRatings.Models;
 using PlayerRatings.Services;
@@ -219,7 +219,7 @@ namespace PlayerRatings.Controllers
                 ViewData["LoginProvider"] = info.LoginProvider;
                 ViewData["InviteId"] = inviteId;
 
-                var name = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Name);
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
 
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { DisplayName = name });
             }
@@ -232,7 +232,7 @@ namespace PlayerRatings.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null, Guid? inviteId = null)
         {
-            if (User.IsSignedIn())
+            if (_signInManager.IsSignedIn(User))
             {
                 return RedirectToAction(nameof(ManageController.Index), "Manage");
             }
@@ -246,7 +246,7 @@ namespace PlayerRatings.Controllers
                     return View("ExternalLoginFailure");
                 }
 
-                var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
                 ApplicationUser user;
                 IdentityResult result;

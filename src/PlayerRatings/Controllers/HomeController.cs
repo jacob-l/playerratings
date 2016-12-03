@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using PlayerRatings.Localization;
 using PlayerRatings.ViewModels.Home;
 using PlayerRatings.Models;

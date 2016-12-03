@@ -1,7 +1,3 @@
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
 using PlayerRatings.Engine.Rating;
 using PlayerRatings.Engine.Stats;
 using PlayerRatings.Models;
@@ -10,6 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PlayerRatings.Repositories;
 using PlayerRatings.Util;
 
@@ -52,7 +52,7 @@ namespace PlayerRatings.Controllers
 
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(new LeagueDetailsViewModel
@@ -108,7 +108,7 @@ namespace PlayerRatings.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var currentUser = await User.GetApplicationUser(_userManager);
@@ -116,9 +116,14 @@ namespace PlayerRatings.Controllers
             var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, id.Value);
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(league);
+            return View(new LeagueViewModel
+            {
+                Id = league.Id,
+                CreatedByUserId = league.CreatedByUserId,
+                Name = league.Name
+            });
         }
 
         // POST: Leagues/Edit/5
@@ -133,7 +138,7 @@ namespace PlayerRatings.Controllers
                 var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, model.Id);
                 if (league == null)
                 {
-                    return HttpNotFound();
+                    return NotFound();
                 }
 
                 league.Name = model.Name;
@@ -153,7 +158,7 @@ namespace PlayerRatings.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var currentUser = await User.GetApplicationUser(_userManager);
@@ -161,7 +166,7 @@ namespace PlayerRatings.Controllers
             var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, id.Value);
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(new LeagueViewModel
@@ -182,7 +187,7 @@ namespace PlayerRatings.Controllers
             var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, id);
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             _context.League.Remove(league);
@@ -200,13 +205,13 @@ namespace PlayerRatings.Controllers
 
             if (player == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var league = _leaguesRepository.GetAdminAuthorizedLeague(currentUser, player.LeagueId);
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             player.IsBlocked = block;
@@ -222,7 +227,7 @@ namespace PlayerRatings.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var currentUser = await User.GetApplicationUser(_userManager);
@@ -231,7 +236,7 @@ namespace PlayerRatings.Controllers
 
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             league =

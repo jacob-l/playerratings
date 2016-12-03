@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PlayerRatings.Migrations
 {
@@ -17,10 +16,10 @@ namespace PlayerRatings.Migrations
                 name: "Invite",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(maxLength: 450, nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    CreatedUserId = table.Column<string>(nullable: true),
-                    InvitedById = table.Column<string>(nullable: true)
+                    CreatedUserId = table.Column<string>(maxLength: 450, nullable: true),
+                    InvitedById = table.Column<string>(maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,8 +41,8 @@ namespace PlayerRatings.Migrations
                 name: "League",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedByUserId = table.Column<string>(nullable: true),
+                    Id = table.Column<Guid>(maxLength: 450, nullable: false),
+                    CreatedByUserId = table.Column<string>(maxLength: 450, nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -60,10 +59,10 @@ namespace PlayerRatings.Migrations
                 name: "LeaguePlayer",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(maxLength: 450, nullable: false),
                     IsBlocked = table.Column<bool>(nullable: false),
-                    LeagueId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    LeagueId = table.Column<Guid>(maxLength: 450, nullable: false),
+                    UserId = table.Column<string>(maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,14 +84,14 @@ namespace PlayerRatings.Migrations
                 name: "Match",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedByUserId = table.Column<string>(nullable: true),
+                    Id = table.Column<Guid>(maxLength: 450, nullable: false),
+                    CreatedByUserId = table.Column<string>(maxLength: 450, nullable: true),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     Factor = table.Column<double>(nullable: true),
-                    FirstPlayerId = table.Column<string>(nullable: true),
+                    FirstPlayerId = table.Column<string>(maxLength: 450, nullable: true),
                     FirstPlayerScore = table.Column<int>(nullable: false),
-                    LeagueId = table.Column<Guid>(nullable: false),
-                    SecondPlayerId = table.Column<string>(nullable: true),
+                    LeagueId = table.Column<Guid>(maxLength: 450, nullable: false),
+                    SecondPlayerId = table.Column<string>(maxLength: 450, nullable: true),
                     SecondPlayerScore = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

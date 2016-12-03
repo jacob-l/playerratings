@@ -1,7 +1,3 @@
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
 using PlayerRatings.Models;
 using PlayerRatings.Services;
 using PlayerRatings.Util;
@@ -9,6 +5,10 @@ using PlayerRatings.ViewModels.Invites;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using PlayerRatings.Localization;
 using PlayerRatings.Repositories;
@@ -50,7 +50,7 @@ namespace PlayerRatings.Controllers
 
             if (leagueId.HasValue && _leaguesRepository.GetUserAuthorizedLeague(currentUser, leagueId.Value) == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             if (!leagues.Any())
@@ -111,7 +111,7 @@ namespace PlayerRatings.Controllers
             var invite = await _context.Invites.Include(i => i.CreatedUser).SingleAsync(m => m.Id == id);
             if (invite == null || invite.InvitedById != currentUser.Id)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(new InviteViewModel
@@ -131,7 +131,7 @@ namespace PlayerRatings.Controllers
                 var invite = await _context.Invites.Include(i => i.CreatedUser).SingleAsync(m => m.Id == model.Id);
                 if (invite == null || invite.InvitedById != currentUser.Id)
                 {
-                    return HttpNotFound();
+                    return NotFound();
                 }
 
                 var createdUser = invite.CreatedUser;
@@ -156,13 +156,13 @@ namespace PlayerRatings.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var invite = await _context.Invites.Include(i => i.CreatedUser).SingleOrDefaultAsync(m => m.Id == id);
             if (invite == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(invite);
