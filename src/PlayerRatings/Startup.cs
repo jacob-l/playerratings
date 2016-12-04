@@ -48,7 +48,6 @@ namespace PlayerRatings
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            var a = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddEntityFramework()
                 .AddEntityFrameworkSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>

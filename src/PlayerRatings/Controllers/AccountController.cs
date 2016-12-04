@@ -195,7 +195,7 @@ namespace PlayerRatings.Controllers
             {
                 if (inviteId.HasValue)
                 {
-                    return Redirect(_serviceProvider.GetService<IInvitesService>().GetInviteUrl(inviteId.Value));
+                    return Redirect(_serviceProvider.GetService<IInvitesService>().GetInviteUrl(inviteId.Value, Url));
                 }
 
                 return RedirectToAction(nameof(Login));

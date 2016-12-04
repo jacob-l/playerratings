@@ -10,7 +10,7 @@
 <form asp-controller="League" asp-action="Invite" method="post" class="form-horizontal" role="form">
     <h4>@LocString[nameof(LocalizationKey.InvitationForm)]</h4>
     <hr />
-    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="LeagueId" class="col-md-2 control-label">@LocString[nameof(LocalizationKey.League)]</label>
         <div class="col-md-10">

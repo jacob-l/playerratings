@@ -93,7 +93,7 @@ namespace PlayerRatings.Controllers
 
             try
             {
-                await _invitesService.Invite(invite.Email, currentUser, league);
+                await _invitesService.Invite(invite.Email, currentUser, league, Url);
             }
             catch (Exception ex)
             {
@@ -142,7 +142,7 @@ namespace PlayerRatings.Controllers
 
                 await _userManager.UpdateAsync(createdUser);
 
-                await _invitesService.SendEmail(invite);
+                await _invitesService.SendEmail(invite, Url);
 
                 return RedirectToAction(nameof(Index));
             }
