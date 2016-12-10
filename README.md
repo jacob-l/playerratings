@@ -10,6 +10,7 @@ Project is availabe at <a href="http://playerratings.azurewebsites.net">http://p
 * MVC
 * Bootstrap
 * MS SQL Server 2014
+* Entity Framework Core
 
 ## Requirements
 
