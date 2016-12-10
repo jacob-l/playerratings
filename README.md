@@ -6,24 +6,13 @@ Project is availabe at <a href="http://playerratings.azurewebsites.net">http://p
 
 ## Built with
 
-* ASP.Net Core Release Candidate 1
+* ASP.Net Core 1.0
 * MVC
 * Bootstrap
 * MS SQL Server 2014
-* Entity framework
 
 ## Requirements
 
-### Add package source to nuget.
-Go to Tools -> Options -> NuGet Package Manager.
-Press add(green plus) button.
-
-Name: aspnet-contrib
-Source: https://www.myget.org/F/aspnet-contrib/api/v3/index.json
-
-Press Update and Ok
-
-It is necessary to load Moq for Core.
 
 ## Authors
 

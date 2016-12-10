@@ -93,7 +93,7 @@ namespace PlayerRatings.Controllers
         // GET: /<controller>/
         public async Task<IActionResult> Create(Guid? leagueId)
         {
-            var currentUser = await User.GetApplicationUser(_userManager);
+            var currentUser = await _userManager.GetUserAsync(User);
 
             var leagues = GetLeagues(currentUser, null);
 

@@ -59,8 +59,11 @@ namespace PlayerRatings.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _emailSender.SendEmailAsync(_settings.Value.ContactEmail, "Message from support page",
-                    model.Message + "\n\n\n" + model.ClientContact);
+                if (_settings.Value.ContactEmail != null)
+                {
+                    await _emailSender.SendEmailAsync(_settings.Value.ContactEmail, "Message from support page",
+                        model.Message + "\n\n\n" + model.ClientContact);
+                }
 
                 ViewData["Message"] = _localizer[nameof(LocalizationKey.YourMessageIsSent)];
 

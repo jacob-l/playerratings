@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlayerRatings.Models
 {
+    [Table("Match")]
     public class Match
     {
         public Guid Id { get; set; }

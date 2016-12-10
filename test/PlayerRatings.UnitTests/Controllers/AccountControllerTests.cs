@@ -1,13 +1,11 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Features;
-using Microsoft.AspNet.Http.Features.Authentication;
-using Microsoft.AspNet.Http.Features.Authentication.Internal;
-using Microsoft.AspNet.Http.Internal;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -43,7 +41,6 @@ namespace PlayerRatings.UnitTests.Controllers
         {
             var services = new ServiceCollection();
             services.AddEntityFramework()
-                .AddInMemoryDatabase()
                 .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -88,7 +85,7 @@ namespace PlayerRatings.UnitTests.Controllers
 
             // Arrange
             SignInManagerMock.Setup(o => o.PasswordSignInAsync(email, password, false, false))
-                .Returns(Task.FromResult(SignInResult.Success));
+                .Returns(Task.FromResult(Microsoft.AspNetCore.Identity.SignInResult.Success));
             var urlHelperMock = new Mock<IUrlHelper>();
             urlHelperMock.Setup(o => o.IsLocalUrl(null)).Returns(false);
 
@@ -122,7 +119,7 @@ namespace PlayerRatings.UnitTests.Controllers
             // Arrange
             SignInManagerMock.Setup(
                 o => o.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .Returns(Task.FromResult(SignInResult.Failed));
+                .Returns(Task.FromResult(Microsoft.AspNetCore.Identity.SignInResult.Failed));
 
             var controller = new AccountController(Context, UserManager, SignInManagerMock.Object,
                 ServiceProvider.GetRequiredService<ILoggerFactory>(), ServiceProvider,
