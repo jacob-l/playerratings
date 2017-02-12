@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
 using PlayerRatings.Models;
 using PlayerRatings.Util;
 using PlayerRatings.ViewModels.Match;
@@ -11,6 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Csv;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PlayerRatings.Localization;
 using PlayerRatings.Repositories;
 using PlayerRatings.Services;
@@ -46,7 +46,7 @@ namespace PlayerRatings.Controllers
 
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var matchesCount = _context.Match.Count(m => m.LeagueId == leagueId);
@@ -54,7 +54,7 @@ namespace PlayerRatings.Controllers
 
             if (page >= pagesCount && page != 0)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var matches =
@@ -93,7 +93,7 @@ namespace PlayerRatings.Controllers
         // GET: /<controller>/
         public async Task<IActionResult> Create(Guid? leagueId)
         {
-            var currentUser = await User.GetApplicationUser(_userManager);
+            var currentUser = await _userManager.GetUserAsync(User);
 
             var leagues = GetLeagues(currentUser, null);
 
@@ -212,7 +212,7 @@ namespace PlayerRatings.Controllers
             var match = _context.Match.Include(m => m.League).Single(m => m.Id == id);
             if (match == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var currentUser = await User.GetApplicationUser(_userManager);
@@ -221,7 +221,7 @@ namespace PlayerRatings.Controllers
 
             if (league.CreatedByUserId != currentUser.Id && match.CreatedByUserId != currentUser.Id)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var leagues = new[] { match.League };
@@ -249,7 +249,7 @@ namespace PlayerRatings.Controllers
                 var match = _context.Match.Single(m => m.Id == id);
                 if (match == null)
                 {
-                    return HttpNotFound();
+                    return NotFound();
                 }
 
                 var currentUser = await User.GetApplicationUser(_userManager);
@@ -300,7 +300,7 @@ namespace PlayerRatings.Controllers
             var match = _context.Match.Include(m => m.League).Include(m => m.FirstPlayer).Include(m => m.SecondPlayer).Single(m => m.Id == id);
             if (match == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var currentUser = await User.GetApplicationUser(_userManager);
@@ -309,7 +309,7 @@ namespace PlayerRatings.Controllers
 
             if (league.CreatedByUserId != currentUser.Id && match.CreatedByUserId != currentUser.Id)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(match);
@@ -322,7 +322,7 @@ namespace PlayerRatings.Controllers
             var match = _context.Match.Single(m => m.Id == id);
             if (match == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var currentUser = await User.GetApplicationUser(_userManager);
@@ -331,7 +331,7 @@ namespace PlayerRatings.Controllers
 
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             _context.Match.Remove(match);
@@ -353,7 +353,7 @@ namespace PlayerRatings.Controllers
 
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(new ImportViewModel
@@ -378,7 +378,7 @@ namespace PlayerRatings.Controllers
 
             if (league == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             var matches = new[] { model.File }.SelectMany(f =>
@@ -436,7 +436,7 @@ namespace PlayerRatings.Controllers
 
             foreach (var email in emails)
             {
-                result[email] = await _invitesService.Invite(email, currentUser, league);
+                result[email] = await _invitesService.Invite(email, currentUser, league, Url);
             }
 
             return result;

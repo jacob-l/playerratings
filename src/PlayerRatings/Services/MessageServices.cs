@@ -1,7 +1,7 @@
 ﻿
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace PlayerRatings.Services

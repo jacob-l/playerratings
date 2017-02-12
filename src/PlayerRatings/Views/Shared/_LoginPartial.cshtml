@@ -1,14 +1,16 @@
 ﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
 @using PlayerRatings.Localization
 @using PlayerRatings.Util
 
 @inject UserManager<ApplicationUser> UserManager;
+@inject SignInManager<ApplicationUser> SignInManager;
 
 @{
     var appUser = await User.GetApplicationUser(UserManager);
 }
 
-@if (User.IsSignedIn())
+@if (SignInManager.IsSignedIn(User))
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">

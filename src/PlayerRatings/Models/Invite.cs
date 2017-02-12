@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlayerRatings.Models
 {
+    [Table("Invite")]
     public class Invite
     {
         public Guid Id { get; set; }

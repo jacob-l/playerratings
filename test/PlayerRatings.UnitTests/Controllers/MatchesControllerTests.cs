@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
 using PlayerRatings.Controllers;
 using Xunit;
 using FluentAssertions;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Features;
-using Microsoft.AspNet.Http.Features.Authentication;
-using Microsoft.AspNet.Http.Features.Authentication.Internal;
-using Microsoft.AspNet.Http.Internal;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -38,7 +36,6 @@ namespace PlayerRatings.UnitTests.Controllers
         {
             var services = new ServiceCollection();
             services.AddEntityFramework()
-                .AddInMemoryDatabase()
                 .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -63,22 +60,22 @@ namespace PlayerRatings.UnitTests.Controllers
                 Id = userId
             });
             Context.SaveChanges();
-            var validPrincipal = new ClaimsPrincipal(
+            var user = new ClaimsPrincipal(
                 new[]
                 {
                     new ClaimsIdentity(
-                        new[] {new Claim(ClaimTypes.NameIdentifier, userId) })
+                        new[]
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, userId)
+                        })
                 });
-
-            var httpContext = new Mock<HttpContext>();
-            httpContext.SetupProperty(o => o.User, validPrincipal);
 
             var controller = new MatchesController(Context, UserManager, StringLocalizerMock.Object,
                 InviteServiceMock.Object, LeaguesRepositoryMock.Object)
             {
-                ActionContext = new ActionContext
+                ControllerContext = new ControllerContext
                 {
-                    HttpContext = httpContext.Object
+                    HttpContext = new DefaultHttpContext { User = user }
                 }
             };
 

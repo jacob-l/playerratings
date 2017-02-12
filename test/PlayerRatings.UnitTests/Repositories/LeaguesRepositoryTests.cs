@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Common;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using PlayerRatings.Models;
 using PlayerRatings.Repositories;
+using System;
+using System.Linq;
 using Xunit;
 
 namespace PlayerRatings.UnitTests.Repositories
@@ -30,8 +29,8 @@ namespace PlayerRatings.UnitTests.Repositories
         {
             var services = new ServiceCollection();
             services.AddEntityFramework()
-                .AddInMemoryDatabase()
                 .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

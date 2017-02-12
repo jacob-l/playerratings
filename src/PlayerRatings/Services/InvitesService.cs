@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using PlayerRatings.Controllers;
 using PlayerRatings.Localization;
@@ -16,37 +16,35 @@ namespace PlayerRatings.Services
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUrlHelper _urlHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStringLocalizer<InvitesService> _localizer;
 
         public InvitesService(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            IEmailSender emailSender, IUrlHelper urlHelper, IHttpContextAccessor httpContextAccessor,
+            IEmailSender emailSender, IHttpContextAccessor httpContextAccessor,
             IStringLocalizer<InvitesService> localizer)
         {
             _context = context;
             _userManager = userManager;
             _emailSender = emailSender;
-            _urlHelper = urlHelper;
             _httpContextAccessor = httpContextAccessor;
             _localizer = localizer;
         }
 
-        public string GetInviteUrl(Guid inviteId)
+        public string GetInviteUrl(Guid inviteId, IUrlHelper urlHelper)
         {
-            return _urlHelper.Action(nameof(AccountController.Register), "Account", new {inviteId},
+            return urlHelper.Action(nameof(AccountController.Register), "Account", new {inviteId},
                 _httpContextAccessor.HttpContext.Request.Scheme);
         }
 
-        public async Task SendEmail(Invite invite)
+        public async Task SendEmail(Invite invite, IUrlHelper urlHelper)
         {
-            var callbackUrl = GetInviteUrl(invite.Id);
+            var callbackUrl = GetInviteUrl(invite.Id, urlHelper);
             var title = _localizer[nameof(LocalizationKey.InvitedYou), invite.InvitedBy.DisplayName];
             var msg = _localizer[nameof(LocalizationKey.ConfirmAccount), callbackUrl];
             await _emailSender.SendEmailAsync(invite.CreatedUser.Email, title, msg);
         }
 
-        public async Task<ApplicationUser> Invite(string email, ApplicationUser invitedBy, League league)
+        public async Task<ApplicationUser> Invite(string email, ApplicationUser invitedBy, League league, IUrlHelper urlHelper)
         {
             var invited = await _userManager.FindByEmailAsync(email);
 
@@ -92,7 +90,7 @@ namespace PlayerRatings.Services
 
             if (invitation != null)
             {
-                SendEmail(invitation);
+                SendEmail(invitation, urlHelper);
             }
 
             return invited;

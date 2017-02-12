@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlayerRatings.Models
 {
+    [Table("League")]
     public class League
     {
         public Guid Id { get; set; }

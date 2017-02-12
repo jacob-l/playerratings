@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using PlayerRatings.Localization;
 using PlayerRatings.ViewModels.Home;
 using PlayerRatings.Models;
@@ -59,8 +59,11 @@ namespace PlayerRatings.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _emailSender.SendEmailAsync(_settings.Value.ContactEmail, "Message from support page",
-                    model.Message + "\n\n\n" + model.ClientContact);
+                if (_settings.Value.ContactEmail != null)
+                {
+                    await _emailSender.SendEmailAsync(_settings.Value.ContactEmail, "Message from support page",
+                        model.Message + "\n\n\n" + model.ClientContact);
+                }
 
                 ViewData["Message"] = _localizer[nameof(LocalizationKey.YourMessageIsSent)];
 

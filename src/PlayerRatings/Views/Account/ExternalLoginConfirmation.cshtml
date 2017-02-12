@@ -10,7 +10,7 @@
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" asp-route-inviteid="@ViewData["InviteId"]" method="post" class="form-horizontal" role="form">
     <h4>@LocString[nameof(LocalizationKey.AssociateForm)]</h4>
     <hr />
-    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div asp-validation-summary="All" class="text-danger"></div>
 
     <p class="text-info">
         @LocString[nameof(LocalizationKey.YouSuccessfullyAuthenticatedWith)] <strong>@ViewData["LoginProvider"]</strong>.

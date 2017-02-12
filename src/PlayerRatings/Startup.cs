@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using PlayerRatings.Localization;
 using PlayerRatings.Models;
 using PlayerRatings.Repositories;
@@ -21,8 +22,10 @@ namespace PlayerRatings
             // Set up configuration sources.
 
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
@@ -46,9 +49,9 @@ namespace PlayerRatings
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddEntityFramework()
-                .AddSqlServer()
+                .AddEntityFrameworkSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
@@ -57,7 +60,7 @@ namespace PlayerRatings
                     o.Password.RequireDigit = false;
                     o.Password.RequireLowercase = false;
                     o.Password.RequireUppercase = false;
-                    o.Password.RequireNonLetterOrDigit = false;
+                    o.Password.RequireNonAlphanumeric = false;
                     o.Password.RequiredLength = 5;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -118,8 +121,6 @@ namespace PlayerRatings
 
             SampleData.Initialize(app.ApplicationServices);
 
-            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
-
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
@@ -134,10 +135,11 @@ namespace PlayerRatings
                 if (!string.IsNullOrWhiteSpace(appSettings.Value?.GoogleClientId) && !string.IsNullOrWhiteSpace(appSettings.Value.GoogleClientSecret))
                 {
                     // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
-                    app.UseGoogleAuthentication(options =>
+
+                    app.UseGoogleAuthentication(new GoogleOptions()
                     {
-                        options.ClientId = appSettings.Value.GoogleClientId;
-                        options.ClientSecret = appSettings.Value.GoogleClientSecret;
+                        ClientId = appSettings.Value.GoogleClientId,
+                        ClientSecret = appSettings.Value.GoogleClientSecret
                     });
                 }
             }
@@ -149,8 +151,5 @@ namespace PlayerRatings
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }
