@@ -25,8 +25,6 @@ namespace PlayerRatings.UnitTests.Controllers
 
         private UserManager<ApplicationUser> UserManager { get; }
 
-        private SignInManager<ApplicationUser> SignInManager { get; }
-
         private Mock<ILoggerFactory> LoggerMock { get; } = new Mock<ILoggerFactory>();
 
         private IServiceProvider ServiceProvider { get; }
@@ -40,9 +38,9 @@ namespace PlayerRatings.UnitTests.Controllers
         public AccountControllerTests()
         {
             var services = new ServiceCollection();
-            services.AddEntityFramework()
-                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services
+                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("in-memory"));
+            services.AddIdentityCore<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var context = new DefaultHttpContext();
@@ -51,13 +49,12 @@ namespace PlayerRatings.UnitTests.Controllers
 
             ServiceProvider = services.BuildServiceProvider();
 
-            SignInManager = ServiceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
             Context = ServiceProvider.GetRequiredService<ApplicationDbContext>();
             UserManager = ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             SignInManagerMock = new Mock<SignInManager<ApplicationUser>>(UserManager,
                 ServiceProvider.GetRequiredService<IHttpContextAccessor>(),
-                ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>(), null, null);
+                ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>(), null, null, null, null);
         }
 
         [Theory]
@@ -66,7 +63,7 @@ namespace PlayerRatings.UnitTests.Controllers
         public void GetLoginTest(string returnUrl)
         {
             // Arrange
-            var controller = new AccountController(Context, UserManager, SignInManager, LoggerMock.Object, ServiceProvider,
+            var controller = new AccountController(Context, UserManager, SignInManagerMock.Object, LoggerMock.Object, ServiceProvider,
                 EmailSenderMock.Object, StringLocalizerMock.Object);
 
             // Act

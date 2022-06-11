@@ -9,7 +9,7 @@
 
 <form method="post" asp-antiforgery="true">
     <div class="form-horizontal">
-        <h4>@LocString[nameof(LocalizationKey.Match)]</h4>
+        <h2>@LocString[nameof(LocalizationKey.Match)]</h2>
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
@@ -27,7 +27,9 @@
             <div class="col-md-10">
                 <!-- If js is enabled, next field will be hidden and replaced by the next one with attached js calendar -->
                 <input asp-for="Date" class="form-control mvc-date-field" />
+                <!--
                 <input class="form-control bootstrap-date" style="display:none" data-locale="@LanguageData.CurrentLanguage"/>
+                -->
                 <span asp-validation-for="Date" class="text-danger" />
             </div>
         </div>
@@ -103,7 +105,9 @@
 
     <script src="~/lib/moment/min/moment.min.js"></script>
     <script src="~/lib/moment/min/locales.min.js"></script>
+    <!--
     <script src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    -->
     <script>
         if (!Date.prototype.toISOString) {
             (function () {
@@ -131,6 +135,7 @@
         }
 
         $(function () {
+            /*
             $('.bootstrap-date').each(function (index, element) {
                 var item = $(element);
                 var mvcField = item.siblings('.mvc-date-field');
@@ -143,7 +148,7 @@
                 item.on('dp.change', function (e) {
                     mvcField.val(e.date.toISOString());
                 });
-            });
+            });*/
 
             var playerSelectors = [];
             $('.player-selector').each(function (index, element) {

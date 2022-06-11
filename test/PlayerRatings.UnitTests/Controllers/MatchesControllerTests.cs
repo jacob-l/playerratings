@@ -35,9 +35,9 @@ namespace PlayerRatings.UnitTests.Controllers
         public MatchesControllerTests()
         {
             var services = new ServiceCollection();
-            services.AddEntityFramework()
-                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services
+                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("in-memory"));
+            services.AddIdentityCore<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var context = new DefaultHttpContext();

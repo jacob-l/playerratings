@@ -90,7 +90,7 @@ namespace PlayerRatings.Services
 
             if (invitation != null)
             {
-                SendEmail(invitation, urlHelper);
+                _ = SendEmail(invitation, urlHelper);
             }
 
             return invited;

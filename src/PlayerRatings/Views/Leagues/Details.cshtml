@@ -14,7 +14,7 @@
 <h2>@ViewData["Title"]</h2>
 
 <div>
-    <h4>@LocString[nameof(LocalizationKey.League)] - @Html.DisplayFor(model => model.League.Name)</h4>
+    <h2>@LocString[nameof(LocalizationKey.League)] - @Html.DisplayFor(model => model.League.Name)</h2>
 
     <table class="table">
         @foreach (var player in Model.Players)
