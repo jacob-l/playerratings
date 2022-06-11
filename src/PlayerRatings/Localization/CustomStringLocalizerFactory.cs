@@ -9,7 +9,7 @@ namespace PlayerRatings.Localization
 {
     public class CustomStringLocalizerFactory : IStringLocalizerFactory, ILanguageData
     {
-        private const string DefaultLanguage = "en";
+        public const string DefaultLanguage = "en";
 
         private readonly IHttpContextAccessor _contextAccessor;
 

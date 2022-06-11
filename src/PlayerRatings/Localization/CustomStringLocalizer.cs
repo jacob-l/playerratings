@@ -9,6 +9,11 @@ namespace PlayerRatings.Localization
     {
         private readonly string _preferedLang;
 
+        public CustomStringLocalizer()
+        {
+            _preferedLang = CustomStringLocalizerFactory.DefaultLanguage;
+        }
+
         public CustomStringLocalizer(string preferedLang)
         {
             _preferedLang = preferedLang;

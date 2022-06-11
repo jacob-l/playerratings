@@ -28,10 +28,10 @@ namespace PlayerRatings.UnitTests.Repositories
         public LeaguesRepositoryTests()
         {
             var services = new ServiceCollection();
-            services.AddEntityFramework()
-                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
+            services
+                .AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("in-memory"));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentityCore<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var serviceProvider = services.BuildServiceProvider();
@@ -137,7 +137,7 @@ namespace PlayerRatings.UnitTests.Repositories
 
             // Assert
             authorizedResult.Should().NotBeNull();
-            authorizedResult.IsSameOrEqualTo(League1);
+            authorizedResult.Should().BeSameAs(League1);
             notAuthorizedResult.Should().BeNull();
         }
 
@@ -161,7 +161,7 @@ namespace PlayerRatings.UnitTests.Repositories
 
             // Assert
             authorizedResult.Should().NotBeNull();
-            authorizedResult.IsSameOrEqualTo(League1);
+            authorizedResult.Should().BeSameAs(League1);
             notAuthorizedResult.Should().BeNull();
         }
     }

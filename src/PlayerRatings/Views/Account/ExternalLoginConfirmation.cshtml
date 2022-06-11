@@ -8,7 +8,7 @@
 <h3>@LocString[nameof(LocalizationKey.AssociateYourAccount), ViewData["LoginProvider"]].</h3>
 
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" asp-route-inviteid="@ViewData["InviteId"]" method="post" class="form-horizontal" role="form">
-    <h4>@LocString[nameof(LocalizationKey.AssociateForm)]</h4>
+    <h2>@LocString[nameof(LocalizationKey.AssociateForm)]</h2>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
 
