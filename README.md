@@ -2,18 +2,24 @@
 
 Elo based rating system for two players games: table football, tennis, go and etc. Includes management for leagues, players, matches. Additional statistics: win rate, goals against/for, loose/win streaks.
 
-Project is availabe at <a href="http://playerratings.azurewebsites.net">http://playerratings.azurewebsites.net</a>. Feel free to join.
+The project is availabe at <a href="http://elo.su">http://elo.su</a>. Feel free to join.
 
 ## Built with
 
-* ASP.Net Core 1.0
+* ASP.NET Core 6.0
 * MVC
-* Bootstrap
-* MS SQL Server 2014
+* Bootstrap 3
+* MS SQL Server or SQLite
 * Entity Framework Core
 
 ## Requirements
 
+.NET 6
+
+## How to Run?
+* Install .NET 6
+* Install Bower and run "bower install" OR Extract lib.zip to the wwwroot folder
+* Run "dotnet restore" and "dotnet run"
 
 ## Authors
 
